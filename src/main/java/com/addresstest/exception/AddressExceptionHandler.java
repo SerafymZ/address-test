@@ -17,9 +17,4 @@ public class AddressExceptionHandler {
     public ResponseEntity<ResponseDto<String>> handleException(NotFoundAddressException exception) {
         return new ResponseEntity<>(ResponseDto.failedResponseDto(exception.getMessage()), HttpStatus.NOT_FOUND);
     }
-
-    @ExceptionHandler
-    public ResponseEntity<ResponseDto<String>> handleException(EmptyResultDataAccessException exception) {
-        return new ResponseEntity<>(ResponseDto.failedResponseDto(exception.getMessage()), HttpStatus.NOT_FOUND);
-    }
 }

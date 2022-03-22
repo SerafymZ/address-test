@@ -5,6 +5,6 @@ import com.addresstest.dto.AddressDto;
 public interface AddressService {
     AddressDto saveAddress(AddressDto addressDto);
     AddressDto getAddressById(long addressId);
-    AddressDto updateAddress(AddressDto addressDto);
+    AddressDto updateAddress(long addressId, AddressDto addressDto);
     int deleteAddressById(long addressId);
 }

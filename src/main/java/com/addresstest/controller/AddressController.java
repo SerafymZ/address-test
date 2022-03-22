@@ -36,16 +36,13 @@ public class AddressController {
             @PathVariable Long addressId,
             @RequestBody AddressDto addressDto
     ) {
-        var addressResult = addressService.updateAddress(addressDto);
+        var addressResult = addressService.updateAddress(addressId, addressDto);
         return ResponseEntity.ok(ResponseDto.okResponseDto(addressResult)) ;
     }
 
     @DeleteMapping("/{addressId}")
     public ResponseEntity<ResponseDto<Integer>> deleteAddressById(@PathVariable Long addressId) {
         var deleteResult = addressService.deleteAddressById(addressId);
-        if(deleteResult == 0) {
-            throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");
-        }
         return ResponseEntity.ok(ResponseDto.okResponseDto(deleteResult));
     }
 }

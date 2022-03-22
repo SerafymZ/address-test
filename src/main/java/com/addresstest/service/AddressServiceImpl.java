@@ -17,8 +17,8 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public AddressDto saveAddress(AddressDto addressDto) {
-        var result = addressRepository.saveAddress(addressMapper.toEntity(addressDto));
-        return addressMapper.toDto(result);
+        var addressEntity = addressRepository.saveAddress(addressMapper.toEntity(addressDto));
+        return addressMapper.toDto(addressEntity);
     }
 
     @Override
@@ -29,13 +29,19 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
-    public AddressDto updateAddress(AddressDto addressDto) {
-        var result = addressRepository.updateAddress(addressMapper.toEntity(addressDto));
-        return addressMapper.toDto(result);
+    public AddressDto updateAddress(long addressId, AddressDto addressDto) {
+        getAddressById(addressId);
+        var addressEntity = addressRepository.updateAddress(addressMapper.toEntity(addressDto));
+        return addressMapper.toDto(addressEntity);
     }
 
     @Override
     public int deleteAddressById(long addressId) {
-        return addressRepository.deleteAddressById(addressId);
+        getAddressById(addressId);
+        int deleteResult = addressRepository.deleteAddressById(addressId);
+        if (deleteResult == 0) {
+            throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");
+        }
+        return deleteResult;
     }
 }

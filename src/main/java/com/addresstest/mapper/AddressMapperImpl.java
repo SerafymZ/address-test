@@ -14,7 +14,7 @@ public class AddressMapperImpl implements AddressMapper{
         }
 
         AddressEntity addressEntity = new AddressEntity();
-        if(addressDto.getId() != 0) {
+        if(addressDto.getId() != null) {
             addressEntity.setId(addressDto.getId());
         }
 
@@ -31,7 +31,7 @@ public class AddressMapperImpl implements AddressMapper{
             return null;
         }
         AddressDto addressDto = new AddressDto();
-        if(addressEntity.getId() != 0) {
+        if(addressEntity.getId() != null) {
             addressDto.setId(addressEntity.getId());
         }
         if(addressEntity.getAddress() != null) {

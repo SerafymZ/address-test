@@ -1,0 +1,13 @@
+#spring.datasource.url=jdbc:sqlserver://172.21.10.79:1433;DatabaseName=Serafym_1
+#spring.datasource.username=sa
+#spring.datasource.password=upitec
+#server.port=8888
+
+server:
+  port: 8888
+
+spring:
+  datasource:
+    url: jdbc:sqlserver://172.21.10.79:1433;DatabaseName=Serafym_1
+    username: sa
+    password: upitec

@@ -24,13 +24,7 @@ public class AddressController {
 
     @GetMapping("/{addressId}")
     public ResponseEntity<ResponseDto<AddressDto>> getAddressById(@PathVariable Long addressId) {
-        AddressDto addressResult = null;
-        try {
-            addressResult = addressService.getAddressById(addressId);
-        }
-        catch (EmptyResultDataAccessException exception) {
-            throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");
-        }
+        AddressDto addressResult = addressService.getAddressById(addressId);
         if(addressResult == null) {
             throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");
         }

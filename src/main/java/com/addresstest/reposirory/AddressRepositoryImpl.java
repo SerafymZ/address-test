@@ -1,7 +1,9 @@
 package com.addresstest.reposirory;
 
 import com.addresstest.entity.AddressEntity;
+import com.addresstest.exception.NotFoundAddressException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,8 +29,12 @@ public class AddressRepositoryImpl implements AddressRepository {
         var sql = "SELECT id, address FROM address WHERE id=:addressId";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("addressId", addressId);
-        return namedJdbcTemplate
-                .queryForObject(sql, parameters, new BeanPropertyRowMapper<>(AddressEntity.class));
+        try {
+            return namedJdbcTemplate
+                    .queryForObject(sql, parameters, new BeanPropertyRowMapper<>(AddressEntity.class));
+        } catch (EmptyResultDataAccessException exception) {
+            throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");
+        }
     }
 
     @Override

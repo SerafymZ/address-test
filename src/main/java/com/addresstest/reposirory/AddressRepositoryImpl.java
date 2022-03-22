@@ -1,7 +1,6 @@
 package com.addresstest.reposirory;
 
 import com.addresstest.entity.AddressEntity;
-import com.addresstest.exception.NotFoundAddressException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

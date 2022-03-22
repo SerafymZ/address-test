@@ -5,7 +5,6 @@ import com.addresstest.dto.basedto.ResponseDto;
 import com.addresstest.exception.NotFoundAddressException;
 import com.addresstest.service.AddressService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

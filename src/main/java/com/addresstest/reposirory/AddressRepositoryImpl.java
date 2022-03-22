@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class AddressRepositoryImpl implements AddressRepository {
@@ -25,16 +27,18 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public AddressEntity getAddressById(long addressId) {
+    public Optional<AddressEntity> getAddressById(long addressId) {
         var sql = "SELECT id, address FROM address WHERE id=:addressId";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("addressId", addressId);
+        AddressEntity entity = null;
         try {
-            return namedJdbcTemplate
+            entity = namedJdbcTemplate
                     .queryForObject(sql, parameters, new BeanPropertyRowMapper<>(AddressEntity.class));
         } catch (EmptyResultDataAccessException exception) {
-            throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");
+            return Optional.empty();
         }
+        return Optional.of(entity);
     }
 
     @Override

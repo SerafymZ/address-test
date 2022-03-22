@@ -1,6 +1,7 @@
 package com.addresstest.service;
 
 import com.addresstest.dto.AddressDto;
+import com.addresstest.exception.NotFoundAddressException;
 import com.addresstest.mapper.AddressMapper;
 import com.addresstest.reposirory.AddressRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,9 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public AddressDto getAddressById(long addressId) {
-        var result = addressRepository.getAddressById(addressId);
-        return addressMapper.toDto(result);
+        var addressEntity = addressRepository.getAddressById(addressId)
+                .orElseThrow(() -> new NotFoundAddressException("There is no address with ID = " + addressId + " in database."));
+        return addressMapper.toDto(addressEntity);
     }
 
     @Override

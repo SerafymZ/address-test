@@ -2,17 +2,19 @@ package com.addresstest.controller;
 
 import com.addresstest.dto.AddressDto;
 import com.addresstest.dto.basedto.ResponseDto;
+import com.addresstest.exception.NotFoundAddressException;
 import com.addresstest.service.AddressService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/address")
 public class AddressController {
 
-    @Autowired
-    AddressService addressService;
+    private final AddressService addressService;
 
     @PostMapping
     public ResponseEntity<ResponseDto<AddressDto>> saveAddress(@RequestBody AddressDto addressDto) {
@@ -21,20 +23,35 @@ public class AddressController {
     }
 
     @GetMapping("/{addressId}")
-    public ResponseDto<AddressDto> getAddressById(@PathVariable long addressId) {
-        var addressResult = addressService.getAddressById(addressId);
-        return new ResponseDto<>(addressResult);
+    public ResponseEntity<ResponseDto<AddressDto>> getAddressById(@PathVariable Long addressId) {
+        AddressDto addressResult = null;
+        try {
+            addressResult = addressService.getAddressById(addressId);
+        }
+        catch (EmptyResultDataAccessException exception) {
+            throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");
+        }
+        if(addressResult == null) {
+            throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");
+        }
+        return ResponseEntity.ok(ResponseDto.okResponseDto(addressResult));
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseDto<AddressDto>> updateAddress(@RequestBody AddressDto addressDto) {
+    @PutMapping("/{addressId}")
+    public ResponseEntity<ResponseDto<AddressDto>> updateAddress(
+            @PathVariable Long addressId,
+            @RequestBody AddressDto addressDto
+    ) {
         var addressResult = addressService.updateAddress(addressDto);
         return ResponseEntity.ok(ResponseDto.okResponseDto(addressResult)) ;
     }
 
     @DeleteMapping("/{addressId}")
-    public ResponseDto<Integer> deleteAddressById(@PathVariable long addressId) {
-        var addressResult = addressService.deleteAddressById(addressId);
-        return new ResponseDto<>(addressResult);
+    public ResponseEntity<ResponseDto<Integer>> deleteAddressById(@PathVariable Long addressId) {
+        var deleteResult = addressService.deleteAddressById(addressId);
+        if(deleteResult == 0) {
+            throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");
+        }
+        return ResponseEntity.ok(ResponseDto.okResponseDto(deleteResult));
     }
 }

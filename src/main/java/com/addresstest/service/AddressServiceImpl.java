@@ -3,17 +3,16 @@ package com.addresstest.service;
 import com.addresstest.dto.AddressDto;
 import com.addresstest.mapper.AddressMapper;
 import com.addresstest.reposirory.AddressRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class AddressServiceImpl implements AddressService{
 
-    @Autowired
-    AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
 
-    @Autowired
-    AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
 
     @Override
     public AddressDto saveAddress(AddressDto addressDto) {

@@ -3,6 +3,8 @@ package com.addresstest.dto.basedto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -17,6 +19,14 @@ public class ResponseDto<T> extends BaseResponseDto{
 
         var responseDto = new ResponseDto<T>(data);
         responseDto.setStatus(Status.OK);
+
+        return responseDto;
+    }
+
+    public static <T> ResponseDto<T> failedResponseDto(T data) {
+
+        var responseDto = new ResponseDto<T>(data);
+        responseDto.setStatus(Status.Failed);
 
         return responseDto;
     }

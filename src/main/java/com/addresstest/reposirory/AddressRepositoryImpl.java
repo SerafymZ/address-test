@@ -17,8 +17,16 @@ public class AddressRepositoryImpl implements AddressRepository {
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
     @Override
-    public AddressEntity saveAddress(AddressEntity addressEntity) {
-        var sql = "INSERT INTO address (address) OUTPUT inserted.* VALUES (:address)";
+    public AddressEntity findOrInsertAddress(AddressEntity addressEntity) {
+        var sql = "IF NOT EXISTS(SELECT id, address FROM [address] WHERE address LIKE :address)\n" +
+                "BEGIN\n" +
+                "  INSERT INTO [address] (address) OUTPUT inserted.* VALUES\n" +
+                "  (:address)\n" +
+                "END\n" +
+                "ELSE\n" +
+                "BEGIN\n" +
+                "  SELECT id, address FROM [address] WHERE address LIKE :address\n" +
+                "END";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("address", addressEntity.getAddress());
         return namedJdbcTemplate

@@ -16,8 +16,8 @@ public class AddressController {
     private final AddressService addressService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<AddressDto>> saveAddress(@RequestBody AddressDto addressDto) {
-        var addressResult = addressService.saveAddress(addressDto);
+    public ResponseEntity<ResponseDto<AddressDto>> findOrInsertAddress(@RequestBody AddressDto addressDto) {
+        var addressResult = addressService.findOrInsertAddress(addressDto);
         return ResponseEntity.ok(ResponseDto.okResponseDto(addressResult)) ;
     }
 

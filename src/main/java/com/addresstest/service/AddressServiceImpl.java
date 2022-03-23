@@ -16,28 +16,36 @@ public class AddressServiceImpl implements AddressService{
     private final AddressRepository addressRepository;
 
     @Override
-    public AddressDto saveAddress(AddressDto addressDto) {
-        var addressEntity = addressRepository.saveAddress(addressMapper.toEntity(addressDto));
+    public AddressDto findOrInsertAddress(AddressDto addressDto) {
+        var addressEntity = addressRepository.findOrInsertAddress(addressMapper.toEntity(addressDto));
         return addressMapper.toDto(addressEntity);
     }
 
     @Override
     public AddressDto getAddressById(long addressId) {
         var addressEntity = addressRepository.getAddressById(addressId)
-                .orElseThrow(() -> new NotFoundAddressException("There is no address with ID = " + addressId + " in database."));
+                .orElseThrow(() -> new NotFoundAddressException(
+                        "There is no address with ID = " + addressId + " in database."
+                ));
         return addressMapper.toDto(addressEntity);
     }
 
     @Override
     public AddressDto updateAddress(long addressId, AddressDto addressDto) {
-        getAddressById(addressId);
+       addressRepository.getAddressById(addressId)
+                .orElseThrow(() -> new NotFoundAddressException(
+                        "There is no address with ID = " + addressId + " in database."
+                ));
         var addressEntity = addressRepository.updateAddress(addressMapper.toEntity(addressDto));
         return addressMapper.toDto(addressEntity);
     }
 
     @Override
     public int deleteAddressById(long addressId) {
-        getAddressById(addressId);
+        addressRepository.getAddressById(addressId)
+                .orElseThrow(() -> new NotFoundAddressException(
+                        "There is no address with ID = " + addressId + " in database."
+                ));
         int deleteResult = addressRepository.deleteAddressById(addressId);
         if (deleteResult == 0) {
             throw new NotFoundAddressException("There is no address with ID = " + addressId + " in database.");

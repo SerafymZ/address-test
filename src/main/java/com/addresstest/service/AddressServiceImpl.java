@@ -6,10 +6,11 @@ import com.addresstest.mapper.AddressMapper;
 import com.addresstest.reposirory.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class AddressServiceImpl implements AddressService{
+public class AddressServiceImpl implements AddressService {
 
     private final AddressMapper addressMapper;
 
@@ -30,9 +31,10 @@ public class AddressServiceImpl implements AddressService{
         return addressMapper.toDto(addressEntity);
     }
 
+    @Transactional
     @Override
     public AddressDto findOrUpdateAddress(long addressId, AddressDto addressDto) {
-       addressRepository.getAddressById(addressId)
+        addressRepository.getAddressById(addressId)
                 .orElseThrow(() -> new NotFoundAddressException(
                         "There is no address with ID = " + addressId + " in database."
                 ));
@@ -40,6 +42,7 @@ public class AddressServiceImpl implements AddressService{
         return addressMapper.toDto(addressEntity);
     }
 
+    @Transactional
     @Override
     public int deleteAddressById(long addressId) {
         addressRepository.getAddressById(addressId)

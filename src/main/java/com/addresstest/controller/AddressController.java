@@ -31,11 +31,11 @@ public class AddressController {
     }
 
     @PutMapping("/{addressId}")
-    public ResponseEntity<ResponseDto<AddressDto>> updateAddress(
+    public ResponseEntity<ResponseDto<AddressDto>> findOrUpdateAddress(
             @PathVariable Long addressId,
             @RequestBody AddressDto addressDto
     ) {
-        var addressResult = addressService.updateAddress(addressId, addressDto);
+        var addressResult = addressService.findOrUpdateAddress(addressId, addressDto);
         return ResponseEntity.ok(ResponseDto.okResponseDto(addressResult)) ;
     }
 

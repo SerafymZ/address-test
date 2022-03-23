@@ -31,12 +31,12 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
-    public AddressDto updateAddress(long addressId, AddressDto addressDto) {
+    public AddressDto findOrUpdateAddress(long addressId, AddressDto addressDto) {
        addressRepository.getAddressById(addressId)
                 .orElseThrow(() -> new NotFoundAddressException(
                         "There is no address with ID = " + addressId + " in database."
                 ));
-        var addressEntity = addressRepository.updateAddress(addressMapper.toEntity(addressDto));
+        var addressEntity = addressRepository.findOrUpdateAddress(addressMapper.toEntity(addressDto));
         return addressMapper.toDto(addressEntity);
     }
 

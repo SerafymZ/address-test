@@ -49,8 +49,16 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public AddressEntity updateAddress(AddressEntity addressDto) {
-        var sql = "UPDATE address SET address=:address OUTPUT inserted.* WHERE id=:addressId";
+    public AddressEntity findOrUpdateAddress(AddressEntity addressDto) {
+        var sql = "IF NOT EXISTS(SELECT id, address FROM [address] WHERE address LIKE :address)\n" +
+                "BEGIN\n" +
+                "  UPDATE [address] SET address = :address OUTPUT inserted.*\n" +
+                "  WHERE id = :addressId\n" +
+                "END\n" +
+                "ELSE\n" +
+                "BEGIN\n" +
+                "  SELECT id, address FROM [address] WHERE address LIKE :address\n" +
+                "END";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("addressId", addressDto.getId());
         parameters.addValue("address", addressDto.getAddress());

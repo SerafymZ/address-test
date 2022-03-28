@@ -2,7 +2,9 @@ package com.addresstest.validators;
 
 import com.addresstest.dto.AddressDto;
 import com.addresstest.exception.MaxStringFieldValueExceedException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AddressDtoValidatorImpl implements AddressDtoValidator{
     @Override
     public void validate(AddressDto addressDto) {

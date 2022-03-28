@@ -22,7 +22,7 @@ public class AddressExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ResponseDto<String>> handleException(MaxStringFieldValueExceedException exception) {
-        return new ResponseEntity<>(ResponseDto.failedResponseDto(exception.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ResponseDto.failedResponseDto(exception.getMessage()), HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler

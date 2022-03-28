@@ -6,10 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AddressDtoValidatorImpl implements AddressDtoValidator{
+
     @Override
     public void validate(AddressDto addressDto) {
-        if (addressDto.getAddress() == null) {
-            throw new NullPointerException("Address is null.");
+        if (addressDto == null) {
+            throw new NullPointerException("Address dto is null.");
         }
         if (addressDto.getAddress().length() > 50) {
             throw new MaxStringFieldValueExceedException("Exceeded maximum value for string field address. " +

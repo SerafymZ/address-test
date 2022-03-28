@@ -27,7 +27,7 @@ public class AddressRepositoryImpl implements AddressRepository {
                 "BEGIN\n" +
                 "  SELECT id, address FROM [address] WHERE address LIKE :address\n" +
                 "END";
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        var parameters = new MapSqlParameterSource();
         parameters.addValue("address", addressEntity.getAddress());
         return namedJdbcTemplate
                 .queryForObject(sql, parameters, new BeanPropertyRowMapper<>(AddressEntity.class));
@@ -36,7 +36,7 @@ public class AddressRepositoryImpl implements AddressRepository {
     @Override
     public Optional<AddressEntity> getAddressById(long addressId) {
         var sql = "SELECT id, address FROM address WHERE id=:addressId";
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        var parameters = new MapSqlParameterSource();
         parameters.addValue("addressId", addressId);
         AddressEntity entity = null;
         try {
@@ -59,7 +59,7 @@ public class AddressRepositoryImpl implements AddressRepository {
                 "BEGIN\n" +
                 "  SELECT id, address FROM [address] WHERE address LIKE :address\n" +
                 "END";
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        var parameters = new MapSqlParameterSource();
         parameters.addValue("addressId", addressDto.getId());
         parameters.addValue("address", addressDto.getAddress());
         return namedJdbcTemplate
@@ -69,7 +69,7 @@ public class AddressRepositoryImpl implements AddressRepository {
     @Override
     public int deleteAddressById(long addressId) {
         var sql = "DELETE FROM address WHERE id=:addressId";
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        var parameters = new MapSqlParameterSource();
         parameters.addValue("addressId", addressId);
         return namedJdbcTemplate.update(sql, parameters);
     }

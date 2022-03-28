@@ -17,7 +17,7 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<ResponseDto<AddressDto>> findOrInsertAddress(@RequestBody AddressDto addressDto) {
-        var addressResult = addressService.findOrInsertAddress(addressDto);
+        AddressDto addressResult = addressService.findOrInsertAddress(addressDto);
         return ResponseEntity.ok(ResponseDto.okResponseDto(addressResult)) ;
     }
 
@@ -35,13 +35,13 @@ public class AddressController {
             @PathVariable Long addressId,
             @RequestBody AddressDto addressDto
     ) {
-        var addressResult = addressService.findOrUpdateAddress(addressId, addressDto);
+        AddressDto addressResult = addressService.findOrUpdateAddress(addressId, addressDto);
         return ResponseEntity.ok(ResponseDto.okResponseDto(addressResult)) ;
     }
 
     @DeleteMapping("/{addressId}")
     public ResponseEntity<ResponseDto<Integer>> deleteAddressById(@PathVariable Long addressId) {
-        var deleteResult = addressService.deleteAddressById(addressId);
+        int deleteResult = addressService.deleteAddressById(addressId);
         return ResponseEntity.ok(ResponseDto.okResponseDto(deleteResult));
     }
 }

@@ -38,7 +38,7 @@ public class AddressRepositoryImpl implements AddressRepository {
         var sql = "SELECT id, address FROM address WHERE id=:addressId";
         var parameters = new MapSqlParameterSource();
         parameters.addValue("addressId", addressId);
-        AddressEntity entity = null;
+        AddressEntity entity;
         try {
             entity = namedJdbcTemplate
                     .queryForObject(sql, parameters, new BeanPropertyRowMapper<>(AddressEntity.class));

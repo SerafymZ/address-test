@@ -49,24 +49,6 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public AddressEntity findOrUpdateAddress(AddressEntity addressDto) {
-        var sql = "IF NOT EXISTS(SELECT id, address FROM [address] WHERE address LIKE :address)\n" +
-                "BEGIN\n" +
-                "  UPDATE [address] SET address = :address OUTPUT inserted.*\n" +
-                "  WHERE id = :addressId\n" +
-                "END\n" +
-                "ELSE\n" +
-                "BEGIN\n" +
-                "  SELECT id, address FROM [address] WHERE address LIKE :address\n" +
-                "END";
-        var parameters = new MapSqlParameterSource();
-        parameters.addValue("addressId", addressDto.getId());
-        parameters.addValue("address", addressDto.getAddress());
-        return namedJdbcTemplate
-                .queryForObject(sql, parameters, new BeanPropertyRowMapper<>(AddressEntity.class));
-    }
-
-    @Override
     public int deleteAddressById(long addressId) {
         var sql = "DELETE FROM address WHERE id=:addressId";
         var parameters = new MapSqlParameterSource();

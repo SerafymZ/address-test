@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AddressServiceImpl implements AddressService {
 
-    private static final String NO_ADDRESS_MESSAGE_PART_1 = "There is no address with ID = ";
-    private static final String NO_ADDRESS_MESSAGE_PART_2 = " in database.";
+    private static final String NOT_FOUND_ADDRESS_MESSAGE = "There is no address with ID = %d in database.";
 
     private final AddressMapper addressMapper;
 
@@ -32,33 +31,14 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressDto getAddressById(long addressId) {
         AddressEntity addressEntity = addressRepository.getAddressById(addressId)
-                .orElseThrow(() -> new NotFoundAddressException(
-                        NO_ADDRESS_MESSAGE_PART_1 + addressId + NO_ADDRESS_MESSAGE_PART_2
-                ));
-        return addressMapper.toDto(addressEntity);
-    }
-
-    @Override
-    public AddressDto findOrUpdateAddress(long addressId, AddressDto addressDto) {
-        addressDtoValidator.validate(addressDto);
-        addressRepository.getAddressById(addressId)
-                .orElseThrow(() -> new NotFoundAddressException(
-                        NO_ADDRESS_MESSAGE_PART_1 + addressId + NO_ADDRESS_MESSAGE_PART_2
-                ));
-        AddressEntity addressEntity = addressRepository.findOrUpdateAddress(addressMapper.toEntity(addressDto));
+                .orElseThrow(() -> new NotFoundAddressException(String.format(NOT_FOUND_ADDRESS_MESSAGE, addressId)));
         return addressMapper.toDto(addressEntity);
     }
 
     @Override
     public int deleteAddressById(long addressId) {
         addressRepository.getAddressById(addressId)
-                .orElseThrow(() -> new NotFoundAddressException(
-                        NO_ADDRESS_MESSAGE_PART_1 + addressId + NO_ADDRESS_MESSAGE_PART_2
-                ));
-        int deleteResult = addressRepository.deleteAddressById(addressId);
-        if (deleteResult == 0) {
-            throw new NotFoundAddressException(NO_ADDRESS_MESSAGE_PART_1 + addressId + NO_ADDRESS_MESSAGE_PART_2);
-        }
-        return deleteResult;
+                .orElseThrow(() -> new NotFoundAddressException(String.format(NOT_FOUND_ADDRESS_MESSAGE, addressId)));
+        return addressRepository.deleteAddressById(addressId);
     }
 }

@@ -5,7 +5,6 @@ import com.addresstest.entity.AddressEntity;
 import com.addresstest.exception.NotFoundAddressException;
 import com.addresstest.mapper.AddressMapper;
 import com.addresstest.reposirory.AddressRepository;
-import com.addresstest.validators.AddressDtoValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +18,11 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
 
-    private final AddressDtoValidator addressDtoValidator;
-
     @Override
     public AddressDto findOrInsertAddress(AddressDto addressDto) {
-        addressDtoValidator.validate(addressDto);
+        if (addressDto == null) {
+            throw new NullPointerException("Address dto is null.");
+        }
         AddressEntity addressEntity = addressRepository.findOrInsertAddress(addressMapper.toEntity(addressDto));
         return addressMapper.toDto(addressEntity);
     }

@@ -33,8 +33,6 @@ class AddressServiceImplTest {
 
     @Test
     void findOrInsertAddress_shouldBeThrownNullPointerException() {
-
-
         //when
         assertThatThrownBy(() ->
                 addressService.findOrInsertAddress(null)).isInstanceOf(NullPointerException.class);

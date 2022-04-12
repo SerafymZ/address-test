@@ -6,8 +6,7 @@ import com.addresstest.initializer.MsSQLServer;
 import com.addresstest.mapper.AddressMapper;
 import com.addresstest.reposirory.AddressRepositoryImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,7 +53,7 @@ class AddressControllerIntegrationTest {
         MsSQLServer.container.start();
     }
 
-    @After
+    @AfterEach
     void clearDb() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "address");
     }
@@ -62,6 +61,9 @@ class AddressControllerIntegrationTest {
     @Test
     void findOrInsertAddress_shouldBeInsertAddressSuccessfully() throws Exception {
         //given
+        var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isZero();
+
         var addressDto = new AddressDto();
         addressDto.setAddress(ADDRESS);
 
@@ -73,14 +75,22 @@ class AddressControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").isNumber())
                 .andExpect(jsonPath("$.data.address").value(ADDRESS));
+
+        actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isEqualTo(1);
     }
 
     @Test
     void findOrInsertAddress_shouldBeFindAddressSuccessfully() throws Exception {
         //given
+        var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isZero();
+
         var addressDto = new AddressDto();
         addressDto.setAddress(ADDRESS);
         findOrInsertTestAddress(addressDto);
+        actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isEqualTo(1);
 
         //when
         mockMvc.perform(
@@ -91,9 +101,9 @@ class AddressControllerIntegrationTest {
                 .andExpect(jsonPath("$.data.id").isNumber())
                 .andExpect(jsonPath("$.data.address").value(ADDRESS));
 
-        var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         var expectedCountLines = 1;
-        Assertions.assertThat(actualCountLines).isEqualTo(expectedCountLines);
+        assertThat(actualCountLines).isEqualTo(expectedCountLines);
     }
 
     @Test
@@ -109,6 +119,8 @@ class AddressControllerIntegrationTest {
     @Test
     void getAddressById_shouldBeGetAddressSuccessful() throws Exception {
         //given
+        var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isZero();
         var addressDto = new AddressDto();
         addressDto.setAddress(ADDRESS);
 
@@ -120,11 +132,18 @@ class AddressControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(id))
                 .andExpect(jsonPath("$.data.address").value(ADDRESS));
+
+        var expectedCountLines = 1;
+        actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isEqualTo(expectedCountLines);
     }
 
     @Test
     void getAddressById_shouldBeNotFoundAddress() throws Exception {
         //given
+        var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isZero();
+
         var addressDto = new AddressDto();
         addressDto.setAddress(ADDRESS);
 
@@ -136,11 +155,18 @@ class AddressControllerIntegrationTest {
                         get(PATH_WITH_ID, notExistId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value("Failed"));
+
+        var expectedCountLines = 1;
+        actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isEqualTo(expectedCountLines);
     }
 
     @Test
     void deleteAddressById_shouldBeDeleteAddressSuccessful() throws Exception {
         //given
+        var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isZero();
+
         var addressDto = new AddressDto();
         addressDto.setAddress(ADDRESS);
         var id = findOrInsertTestAddress(addressDto).getId();
@@ -151,14 +177,17 @@ class AddressControllerIntegrationTest {
                         delete(PATH_WITH_ID, id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").value(result));
-        var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         var expectedCountLines = 0;
-        Assertions.assertThat(actualCountLines).isEqualTo(expectedCountLines);
+        assertThat(actualCountLines).isEqualTo(expectedCountLines);
     }
 
     @Test
     void deleteAddressById_shouldBeNotFoundAddress() throws Exception {
         //given
+        var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        assertThat(actualCountLines).isZero();
+
         var addressDto = new AddressDto();
         addressDto.setAddress(ADDRESS);
         var id = findOrInsertTestAddress(addressDto).getId();
@@ -169,9 +198,9 @@ class AddressControllerIntegrationTest {
                         delete(PATH_WITH_ID, notExistId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value("Failed"));
-        var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
+        actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         var expectedCountLines = 1;
-        Assertions.assertThat(actualCountLines).isEqualTo(expectedCountLines);
+        assertThat(actualCountLines).isEqualTo(expectedCountLines);
     }
 
     private AddressEntity findOrInsertTestAddress(AddressDto addressDto) {

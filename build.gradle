@@ -28,6 +28,7 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	implementation "org.hibernate.validator:hibernate-validator"
 	implementation "javax.validation:validation-api"
+	implementation 'org.projectlombok:lombok:1.18.20'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
@@ -37,6 +38,8 @@ dependencies {
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+	testImplementation group: 'org.testcontainers', name: 'mssqlserver', version: '1.16.3'
 }
 
 tasks.named('test') {

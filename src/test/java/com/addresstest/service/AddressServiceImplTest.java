@@ -41,8 +41,7 @@ class AddressServiceImplTest {
     @Test
     void findOrInsertAddress_shouldBeFindAddressSuccessfully() {
         //given
-        var addressDto = new AddressDto();
-        addressDto.setAddress(ADDRESS);
+        var addressDto = new AddressDto(null, ADDRESS);
 
         var addressEntity = new AddressEntity();
         addressEntity.setAddress(ADDRESS);
@@ -51,9 +50,7 @@ class AddressServiceImplTest {
         addressEntityResult.setId(ID);
         addressEntityResult.setAddress(ADDRESS);
 
-        var expectedResult = new AddressDto();
-        addressEntityResult.setId(ID);
-        addressEntityResult.setAddress(ADDRESS);
+        var expectedResult = new AddressDto(ID, ADDRESS);
 
         when(addressMapper.toEntity(addressDto)).thenReturn(addressEntity);
         when(addressRepository.findOrInsertAddress(addressEntity)).thenReturn(addressEntityResult);
@@ -90,9 +87,7 @@ class AddressServiceImplTest {
         addressEntity.setAddress(ADDRESS);
         when(addressRepository.getAddressById(ID)).thenReturn(Optional.of(addressEntity));
 
-        var expectedResult = new AddressDto();
-        expectedResult.setId(ID);
-        expectedResult.setAddress(ADDRESS);
+        var expectedResult = new AddressDto(ID, ADDRESS);
         when(addressMapper.toDto(addressEntity)).thenReturn(expectedResult);
 
         //when

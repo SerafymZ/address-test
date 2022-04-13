@@ -63,8 +63,7 @@ class AddressControllerIntegrationTest {
         var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         assertThat(actualCountLines).isZero();
 
-        var addressDto = new AddressDto();
-        addressDto.setAddress(ADDRESS);
+        var addressDto = new AddressDto(null, ADDRESS);
 
         //when
         mockMvc.perform(
@@ -85,8 +84,7 @@ class AddressControllerIntegrationTest {
         var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         assertThat(actualCountLines).isZero();
 
-        var addressDto = new AddressDto();
-        addressDto.setAddress(ADDRESS);
+        var addressDto = new AddressDto(null, ADDRESS);
         findOrInsertTestAddress(addressDto);
         actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         assertThat(actualCountLines).isEqualTo(1);
@@ -120,8 +118,7 @@ class AddressControllerIntegrationTest {
         //given
         var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         assertThat(actualCountLines).isZero();
-        var addressDto = new AddressDto();
-        addressDto.setAddress(ADDRESS);
+        var addressDto = new AddressDto(null, ADDRESS);
 
         var id = findOrInsertTestAddress(addressDto).getId();
 
@@ -143,8 +140,7 @@ class AddressControllerIntegrationTest {
         var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         assertThat(actualCountLines).isZero();
 
-        var addressDto = new AddressDto();
-        addressDto.setAddress(ADDRESS);
+        var addressDto = new AddressDto(null, ADDRESS);
 
         var id = findOrInsertTestAddress(addressDto).getId();
         var notExistId = id + 1;
@@ -166,8 +162,7 @@ class AddressControllerIntegrationTest {
         var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         assertThat(actualCountLines).isZero();
 
-        var addressDto = new AddressDto();
-        addressDto.setAddress(ADDRESS);
+        var addressDto = new AddressDto(null, ADDRESS);
         var id = findOrInsertTestAddress(addressDto).getId();
 
         //when
@@ -187,8 +182,7 @@ class AddressControllerIntegrationTest {
         var actualCountLines = JdbcTestUtils.countRowsInTable(jdbcTemplate, "address");
         assertThat(actualCountLines).isZero();
 
-        var addressDto = new AddressDto();
-        addressDto.setAddress(ADDRESS);
+        var addressDto = new AddressDto(null, ADDRESS);
         var id = findOrInsertTestAddress(addressDto).getId();
         var notExistId = id + 1;
 

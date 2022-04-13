@@ -35,8 +35,8 @@ class AddressControllerTest {
     @Test
     void findOrInsertAddress_shouldBeSuccessFindOrInsert() throws Exception {
         //given
-        var addressDto = createAddressDto(null, ADDRESS);
-        var addressDtoResult = createAddressDto(ID, ADDRESS);
+        var addressDto = new AddressDto(null, ADDRESS);
+        var addressDtoResult = new AddressDto(ID, ADDRESS);
         when(addressService.findOrInsertAddress(addressDto)).thenReturn(addressDtoResult);
 
         //when
@@ -54,7 +54,7 @@ class AddressControllerTest {
     @Test
     void getAddressById_shouldBeReturnedAddressDto() throws Exception {
         //given
-        var addressDto = createAddressDto(ID, ADDRESS);
+        var addressDto = new AddressDto(ID, ADDRESS);
 
         when(addressService.getAddressById(ID)).thenReturn(addressDto);
 
@@ -84,12 +84,5 @@ class AddressControllerTest {
 
         //then
         verify(addressService, times(1)).deleteAddressById(ID);
-    }
-
-    private AddressDto createAddressDto(Long id, String address) {
-        var result = new AddressDto();
-        result.setId(id);
-        result.setAddress(address);
-        return result;
     }
 }

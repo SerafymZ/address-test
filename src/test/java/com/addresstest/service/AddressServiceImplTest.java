@@ -43,12 +43,9 @@ class AddressServiceImplTest {
         //given
         var addressDto = new AddressDto(null, ADDRESS);
 
-        var addressEntity = new AddressEntity();
-        addressEntity.setAddress(ADDRESS);
+        var addressEntity = new AddressEntity(null, ADDRESS);
 
-        var addressEntityResult = new AddressEntity();
-        addressEntityResult.setId(ID);
-        addressEntityResult.setAddress(ADDRESS);
+        var addressEntityResult = new AddressEntity(ID, ADDRESS);
 
         var expectedResult = new AddressDto(ID, ADDRESS);
 
@@ -82,9 +79,7 @@ class AddressServiceImplTest {
     @Test
     void getAddressById_shouldBeGetAddressDtoSuccessful() {
         //given
-        var addressEntity = new AddressEntity();
-        addressEntity.setId(ID);
-        addressEntity.setAddress(ADDRESS);
+        var addressEntity = new AddressEntity(ID, ADDRESS);
         when(addressRepository.getAddressById(ID)).thenReturn(Optional.of(addressEntity));
 
         var expectedResult = new AddressDto(ID, ADDRESS);
@@ -114,9 +109,7 @@ class AddressServiceImplTest {
     @Test
     void deleteAddressById_shouldBeReturnedIntSuccessful() {
         //given
-        var addressEntity = new AddressEntity();
-        addressEntity.setId(ID);
-        addressEntity.setAddress(ADDRESS);
+        var addressEntity = new AddressEntity(ID, ADDRESS);
         when(addressRepository.getAddressById(ID)).thenReturn(Optional.of(addressEntity));
         var expectedResult = 1;
         when(addressRepository.deleteAddressById(ID)).thenReturn(expectedResult);

@@ -32,13 +32,6 @@ class AddressServiceImplTest {
     AddressRepository addressRepository;
 
     @Test
-    void findOrInsertAddress_shouldBeThrownNullPointerException() {
-        //when
-        assertThatThrownBy(() ->
-                addressService.findOrInsertAddress(null)).isInstanceOf(NullPointerException.class);
-    }
-
-    @Test
     void findOrInsertAddress_shouldBeFindAddressSuccessfully() {
         //given
         var addressDto = new AddressDto(null, ADDRESS);

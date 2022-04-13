@@ -20,9 +20,6 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressDto findOrInsertAddress(AddressDto addressDto) {
-        if (addressDto == null) {
-            throw new NullPointerException("Address dto is null.");
-        }
         AddressEntity addressEntity = addressRepository.findOrInsertAddress(addressMapper.toEntity(addressDto));
         return addressMapper.toDto(addressEntity);
     }

@@ -25,13 +25,6 @@ public class AddressExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ResponseDto<String>> handleException(NullPointerException exception) {
-        var error = new ErrorDto();
-        error.setMessage(exception.getMessage());
-        return new ResponseEntity<>(ResponseDto.failedResponseDto(List.of(error)), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<ResponseDto<String>> handleException(DataAccessException exception) {
         var error = new ErrorDto();
         error.setMessage(exception.getMessage());

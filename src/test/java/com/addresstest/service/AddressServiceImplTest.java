@@ -42,11 +42,8 @@ class AddressServiceImplTest {
     void findOrInsertAddress_shouldBeFindAddressSuccessfully() {
         //given
         var addressDto = new AddressDto(null, ADDRESS);
-
         var addressEntity = new AddressEntity(null, ADDRESS);
-
         var addressEntityResult = new AddressEntity(ID, ADDRESS);
-
         var expectedResult = new AddressDto(ID, ADDRESS);
 
         when(addressMapper.toEntity(addressDto)).thenReturn(addressEntity);

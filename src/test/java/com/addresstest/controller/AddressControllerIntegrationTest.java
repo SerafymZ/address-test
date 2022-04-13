@@ -1,10 +1,7 @@
 package com.addresstest.controller;
 
 import com.addresstest.dto.AddressDto;
-import com.addresstest.entity.AddressEntity;
 import com.addresstest.initializer.MsSQLServer;
-import com.addresstest.mapper.AddressMapper;
-import com.addresstest.reposirory.AddressRepositoryImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,12 +38,6 @@ class AddressControllerIntegrationTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    AddressRepositoryImpl repository;
-
-    @Autowired
-    AddressMapper addressMapper;
-
-    @Autowired
     JdbcTemplate jdbcTemplate;
 
     @BeforeAll
@@ -62,7 +54,6 @@ class AddressControllerIntegrationTest {
     void findOrInsertAddress_shouldBeInsertAddressSuccessfully() throws Exception {
         //given
         assertThat(countRowsInTable(jdbcTemplate, "address")).isZero();
-
         var addressDto = new AddressDto(null, ADDRESS);
 
         //when
@@ -77,14 +68,12 @@ class AddressControllerIntegrationTest {
         assertThat(countRowsInTable(jdbcTemplate, "address")).isEqualTo(1);
     }
 
+    @Sql("/sql/test_data/find_or_insert_address.sql")
     @Test
     void findOrInsertAddress_shouldBeFindAddressSuccessfully() throws Exception {
         //given
-        assertThat(countRowsInTable(jdbcTemplate, "address")).isZero();
-
-        var addressDto = new AddressDto(null, ADDRESS);
-        findOrInsertTestAddress(addressDto);
         assertThat(countRowsInTable(jdbcTemplate, "address")).isEqualTo(1);
+        var addressDto = new AddressDto(null, ADDRESS);
 
         //when
         mockMvc.perform(
@@ -108,15 +97,14 @@ class AddressControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Sql("/sql/test_data/find_or_insert_address.sql")
     @Test
     void getAddressById_shouldBeGetAddressSuccessful() throws Exception {
         //given
-        assertThat(countRowsInTable(jdbcTemplate, "address")).isZero();
-        var addressDto = new AddressDto(null, ADDRESS);
-
-        var id = findOrInsertTestAddress(addressDto).getId();
+        assertThat(countRowsInTable(jdbcTemplate, "address")).isEqualTo(1);
 
         //when
+        var id = 1L;
         mockMvc.perform(
                         get(PATH_WITH_ID, id))
                 .andExpect(status().isOk())
@@ -137,16 +125,15 @@ class AddressControllerIntegrationTest {
                 .andExpect(jsonPath("$.status").value("Failed"));
     }
 
+    @Sql("/sql/test_data/find_or_insert_address.sql")
     @Test
     void deleteAddressById_shouldBeDeleteAddressSuccessful() throws Exception {
         //given
-        assertThat(countRowsInTable(jdbcTemplate, "address")).isZero();
-
-        var addressDto = new AddressDto(null, ADDRESS);
-        var id = findOrInsertTestAddress(addressDto).getId();
+        assertThat(countRowsInTable(jdbcTemplate, "address")).isEqualTo(1);
 
         //when
         var result = 1;
+        var id = 1L;
         mockMvc.perform(
                         delete(PATH_WITH_ID, id))
                 .andExpect(status().isOk())
@@ -166,9 +153,5 @@ class AddressControllerIntegrationTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value("Failed"));
         assertThat(countRowsInTable(jdbcTemplate, "address")).isZero();
-    }
-
-    private AddressEntity findOrInsertTestAddress(AddressDto addressDto) {
-        return repository.findOrInsertAddress(addressMapper.toEntity(addressDto));
     }
 }

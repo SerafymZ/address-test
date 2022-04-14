@@ -12,6 +12,6 @@ public class AddressDto {
     private Long id;
 
     @NotBlank
-    @Size(max = 50, message = "Address size must be less than 50 symbols.")
+    @Size(max = 50, message = "{address.field.address.exceeded-size}")
     private String address;
 }
